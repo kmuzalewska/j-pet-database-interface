@@ -5,21 +5,8 @@ from django.db import models
 class Setup(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    version = models.PositiveIntegerField(blank=True, null=True)
+    version = models.PositiveIntegerField(blank=True, null=True, default=1)
     createDate = models.DateTimeField(blank=True, null=True)
-
-    def __str__(self):
-        return str(self.name)
-
-
-class Run(models.Model):
-    user = models.ForeignKey('auth.User')
-    name = models.CharField(max_length=100)
-    filePath = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    startTime = models.DateTimeField(blank=True, null=True)
-    endTime = models.DateTimeField(blank=True, null=True)
-    setup = models.ForeignKey(Setup)
 
     def __str__(self):
         return str(self.name)
@@ -44,7 +31,7 @@ class Status(models.Model):
 class Frame(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    status = models.ForeignKey(Status)
+    generalStatus = models.ForeignKey(StatusType)
 
     def __str__(self):
         return str(self.name)
@@ -53,7 +40,7 @@ class Frame(models.Model):
 class Layer(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    status = models.ForeignKey(Status)
+    generalStatus = models.ForeignKey(StatusType)
     radius = models.DecimalField(max_digits=7, decimal_places=2)
     frame = models.ForeignKey(Frame)
 
@@ -64,11 +51,11 @@ class Layer(models.Model):
 class Slot(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    status = models.ForeignKey(Status)
     theta = models.DecimalField(max_digits=7, decimal_places=2)
-    inFrame = models.PositiveIntegerField(blank=True, null=True)
+    inFrameID = models.PositiveIntegerField(blank=True, null=True)
+    generalStatus = models.ForeignKey(StatusType)
     layer = models.ForeignKey(Layer)
-    zOffset = models.DecimalField(max_digits=7, decimal_places=2)
+    parentSlot = models.ForeignKey('self', default=0)
 
     def __str__(self):
         return str(self.name)
@@ -94,21 +81,14 @@ class Scin(models.Model):
         return str(self.name)
 
 
-# class ScinCalibration(models.Model):
-#     name = models.CharField(max_length=100)
-#     attLength = models.DecimalField(max_digits=7, decimal_places=2)
-#     scintillator = models.ForeignKey(Scin)
-#     runs = models.ManyToManyField(Run)
-#
-#     def __str__(self):
-#         return self.id+' '+self.name+' '+self.attLength
-
-
 class ScinInserted(models.Model):
+    scin = models.ForeignKey(Scin)
     status = models.ForeignKey(Status)
     slot = models.ForeignKey(Slot)
     setup = models.ForeignKey(Setup)
-    scin = models.ForeignKey(Scin)
+    attLength = models.DecimalField(blank=True, null=True, max_digits=18, decimal_places=9)
+    velocity = models.DecimalField(blank=True, null=True, max_digits=18, decimal_places=9)
+    zOffset = models.DecimalField(max_digits=7, decimal_places=2, default=0.0)
 
     def __str__(self):
         return str(self.slot)
@@ -179,14 +159,63 @@ class PMInserted(models.Model):
         return str(self.side)+' '+str(self.pm.name)+' '+str(self.slot.name)
 
 
-# class PMCalibration(models.Model):
-#     name = models.CharField(max_length=100)
-#     photoMultiplier = models.ForeignKey(PhotoMultiplier)
-#     optHV = models.DecimalField(max_digits=7, decimal_places=2)
-#     c2e_1 = models.DecimalField(max_digits=7, decimal_places=2)
-#     c2e_2 = models.DecimalField(max_digits=7, decimal_places=2)
-#     gainAlpha = models.DecimalField(max_digits=7, decimal_places=2)
-#     gainBeta = models.DecimalField(max_digits=7, decimal_places=2)
-#
-#     def __str__(self):
-#         return self.id+' '+self.name
+class Run(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class MeasurementType(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Measurement(models.Model):
+    fileName = models.CharField(max_length=100)
+    checksum = models.CharField(max_length=32)
+    run = models.ForeignKey(Run)
+    description = models.TextField(blank=True, null=True)
+    user = models.ForeignKey('auth.User')
+    startDateTime = models.DateTimeField(blank=True, null=True)
+    endDateTime = models.DateTimeField(blank=True, null=True)
+    type = models.ForeignKey(MeasurementType)
+    setup = models.ForeignKey(Setup)
+
+    def __str__(self):
+        return str(self.fileName)
+
+
+class RadiationSourceType(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class RadiationSource(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    type = models.ForeignKey(RadiationSourceType)
+    generalStatus = models.ForeignKey(StatusType)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class RadiationSourceInserted(models.Model):
+    source = models.ForeignKey(RadiationSource)
+    status = models.ForeignKey(Status)
+    measurement = models.ForeignKey(Measurement)
+    colimated = models.BooleanField()
+    positionX = models.DecimalField(blank=True, null=True, max_digits=7, decimal_places=2)
+    positionY = models.DecimalField(blank=True, null=True, max_digits=7, decimal_places=2)
+    positionZ = models.DecimalField(blank=True, null=True, max_digits=7, decimal_places=2)
+
+    def __str__(self):
+        return str(self.source.name)

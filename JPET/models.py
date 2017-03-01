@@ -52,10 +52,9 @@ class Slot(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     theta = models.DecimalField(max_digits=7, decimal_places=2)
-    inFrameID = models.PositiveIntegerField(blank=True, null=True)
     generalStatus = models.ForeignKey(StatusType)
     layer = models.ForeignKey(Layer)
-    parentSlot = models.ForeignKey('self', default=0)
+    parentSlot = models.ForeignKey('self', default=0, blank=True, null=True)
 
     def __str__(self):
         return str(self.name)
@@ -111,6 +110,7 @@ class PM(models.Model):
     maxHV = models.DecimalField(max_digits=7, decimal_places=2)
     takesPositiveVoltage = models.BooleanField()
     pmModel = models.ForeignKey(PMModel)
+    generalStatus = models.ForeignKey(StatusType)
 
     def __str__(self):
         return str(self.name)

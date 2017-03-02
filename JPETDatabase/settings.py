@@ -25,7 +25,7 @@ SECRET_KEY = 'd5+a94w0yxx-^a(!*b4==z^nkl7@cc1styzdg=ga2l0ak%1@pn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sphinx.if.uj.edu.pl']
 
 
 # Application definition
@@ -123,8 +123,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+#for admin static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR, "static"),
+#)
 
 LOGIN_REDIRECT_URL = '/'

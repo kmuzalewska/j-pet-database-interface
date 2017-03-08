@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-
-{% block content %}
-  <h1>Scin</h1>
-    <form method="POST" class="scin-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
-{% endblock content %}

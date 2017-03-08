@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect
@@ -29,7 +28,6 @@ def faq(request):
 
 
 def scin(request):
-    InlineFormSet = inlineformset_factory(ScinType, Scin, form=ScinTypeForm)
     if request.method == "POST":
         form = ScinForm(request.POST)
         if form.is_valid():
@@ -37,7 +35,7 @@ def scin(request):
             return redirect('index')
     else:
         form = ScinForm()
-    return render(request, 'scin.html', {'form': form})
+    return render(request, 'universal.html', {'form': form})
 
 
 def scinType(request):
@@ -48,4 +46,22 @@ def scinType(request):
             return redirect('index')
     else:
         form = ScinTypeForm()
-    return render(request, 'scinType.html', {'form': form})
+    return render(request, 'universal.html', {'form': form})
+
+
+D = {'scin/': Scin, 'scintype/': ScinType}
+
+
+def universal(request, nazwa_modelu):
+    try:
+        if request.method == "POST":
+            form = UniversalForm(request.POST, model=D[nazwa_modelu])
+            if form.is_valid():
+                post = form.save(commit=False)
+                return redirect('index')
+        else:
+            form = UniversalForm(request, model=D[nazwa_modelu])
+        return render(request.GET, 'universal.html', {'form': form})
+    except KeyError:
+        print nazwa_modelu
+    # jak dac 404

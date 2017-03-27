@@ -22,15 +22,15 @@ class ScinTypeForm(forms.ModelForm):
         fields = ('name', 'description',)
 
 
-class UniversalForm(forms.ModelForm):
+#class UniversalForm(forms.Model):
     #model = Scin
 
-    def __init__(self, *args, **kwargs):
-        self.model = kwargs['model']
-        kwargs.pop('model')
-        super(UniversalForm, self).__init__(*args, **kwargs)
-
-    class Meta:
-        model = Scin
-        fields = ('name', 'description', 'type', 'length', 'width', 'height',)
+#    def __init__(self, *args, **kwargs):
+ #       self.model = kwargs['model']
+#        kwargs.pop('model')
+ #       super(UniversalForm, self).__init__(*args, **kwargs)
+#
+#    class Meta:
+ #       model = Scin
+ #       fields = ('name', 'description', 'type', 'length', 'width', 'height',)
 

@@ -1,7 +1,7 @@
 from django import forms
-from .models import Scin, ScinType
+from .models import Scin, ScinType, StatusType
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.db import models
 from django.forms.widgets import PasswordInput, TextInput
 
 
@@ -21,16 +21,14 @@ class ScinTypeForm(forms.ModelForm):
         model = ScinType
         fields = ('name', 'description',)
 
-
-#class UniversalForm(forms.Model):
-    #model = Scin
-
-#    def __init__(self, *args, **kwargs):
- #       self.model = kwargs['model']
-#        kwargs.pop('model')
- #       super(UniversalForm, self).__init__(*args, **kwargs)
-#
-#    class Meta:
- #       model = Scin
- #       fields = ('name', 'description', 'type', 'length', 'width', 'height',)
+listOfAllFields = ['name', 'description']
+dict_of_all_classes = {'Scin':Scin, 'ScinType':ScinType}
+#super(AnagraficaForm, self).__init__(*args, **kw)
+#self.fields['nazione'] = forms.ChoiceField(choices = util.get_countries_tuple_list())
+class UniversalForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        forms.__init__('class')
+        for i in listOfAllFields:
+            if hasattr(dict_of_all_classes['class'], i):
+                self.fields[i] = dict_of_all_classes['class'].__getattribute__(i)  
 

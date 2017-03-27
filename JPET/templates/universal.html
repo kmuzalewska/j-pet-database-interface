@@ -3,7 +3,12 @@
 {% block content %}
   <h1>Form</h1>
     <form method="POST" class="universal">{% csrf_token %}
-        {{ form.as_p }}
+        {%for field in form %}
+	    <div class="fieldWrapper">
+	        {{ field.errors }}
+		{{ field.label_tag }} {{ field }}
+	    </div>
+	{% endfor %}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
 {% endblock content %}

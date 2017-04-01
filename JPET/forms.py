@@ -3,6 +3,7 @@ from .models import Scin, ScinType, StatusType
 from django.contrib.auth.forms import AuthenticationForm
 from django.db import models
 from django.forms.widgets import PasswordInput, TextInput
+import collections
 
 
 class LoginForm(AuthenticationForm):
@@ -22,13 +23,25 @@ class ScinTypeForm(forms.ModelForm):
         fields = ('name', 'description',)
 
 listOfAllFields = ['name', 'description']
-dict_of_all_classes = {'Scin':Scin, 'ScinType':ScinType}
+#dict_of_all_classes = {'scin':Scin, 'scinType':ScinType}
 #super(AnagraficaForm, self).__init__(*args, **kw)
 #self.fields['nazione'] = forms.ChoiceField(choices = util.get_countries_tuple_list())
-class UniversalForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        forms.__init__('class')
-        for i in listOfAllFields:
-            if hasattr(dict_of_all_classes['class'], i):
-                self.fields[i] = dict_of_all_classes['class'].__getattribute__(i)  
+# class UniversalForm(forms.Form):
+#     def __init__(self, *args, **kwargs):
+#         class_name = kwargs.pop('model')
+#         try:
+#             self.class_object =  dict_of_all_classes[class_name]
+#         except KeyError:
+#             print("No %s in dict_of_all_classes"%cls)
+#         super(UniversalForm, self).__init__(*args, **kwargs)
+#         for i in listOfAllFields:
+#             if hasattr(self.class_object, i):
+#                 self.fields[i] = self.class_object.__getattribute__(i) 
+#         for f, attr in self.fields:
+#             f = attr
+#     def save(self):
+#         for f, attr in self.fields:
+#             print(f, attr)
+#         A = self.class_object()
+#         A.save()
 

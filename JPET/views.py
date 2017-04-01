@@ -26,14 +26,21 @@ def faq(request):
     template = loader.get_template('faq.html')
     return HttpResponse(template.render(request))
 
-dict_of_all_classes = {'scintype':(ScinType, ("name", "description")), 'scin':(Scin, ('name', 'description', 'type', 'length', 'width', 'height',))}
+dict_of_all_classes = {'scintype':ScinType, 
+                        'scin':Scin}
 
-def universal(request, nazwa_modelu):
+def fieldsForModel(model_name):
+    modelFields = dict_of_all_classes[model_name]._meta.fields
+    newmodel = []
+    for i in modelFields:
+        newmodel.append(i.name)
+    return newmodel
+
+
+def universal(request, model_name):
     try:#if request.method == "POST":
-        f =modelform_factory(dict_of_all_classes[nazwa_modelu][0], fields=dict_of_all_classes[nazwa_modelu][1])                #       UniversalForm(request.POST, model=nazwa_modelu) 
-        print 'he'
+        f =modelform_factory(dict_of_all_classes[model_name], fields=fieldsForModel(model_name)) 
         form = f()
-        print nazwa_modelu
         if form.is_valid():
             #print(form.fields)
             post = form.save()
@@ -42,7 +49,6 @@ def universal(request, nazwa_modelu):
             #form = UniversalForm(nazwa_modelu)
         return render(request, 'universal.html', {'form': form})
     except KeyError:
-        #print nazwa_modelu
         print 'hello'
     # jak dac 404
 

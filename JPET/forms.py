@@ -10,19 +10,6 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=TextInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Login'}))
     password = forms.CharField(widget=PasswordInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Password'}))
 
-
-class ScinForm(forms.ModelForm):
-    class Meta:
-        model = Scin
-        fields = ('name', 'description', 'type', 'length', 'width', 'height',)
-
-
-class ScinTypeForm(forms.ModelForm):
-    class Meta:
-        model = ScinType
-        fields = ('name', 'description',)
-
-listOfAllFields = ['name', 'description']
 #dict_of_all_classes = {'scin':Scin, 'scinType':ScinType}
 #super(AnagraficaForm, self).__init__(*args, **kw)
 #self.fields['nazione'] = forms.ChoiceField(choices = util.get_countries_tuple_list())
@@ -37,11 +24,5 @@ listOfAllFields = ['name', 'description']
 #         for i in listOfAllFields:
 #             if hasattr(self.class_object, i):
 #                 self.fields[i] = self.class_object.__getattribute__(i) 
-#         for f, attr in self.fields:
-#             f = attr
-#     def save(self):
-#         for f, attr in self.fields:
-#             print(f, attr)
-#         A = self.class_object()
-#         A.save()
+
 

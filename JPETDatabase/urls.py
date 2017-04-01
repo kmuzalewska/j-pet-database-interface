@@ -26,6 +26,6 @@ urlpatterns = [
     url(r'^runs/', views.runs, name='runs'),
     url(r'^setups/', views.setups, name='setups'),
     url(r'^faq/', views.faq, name='faq'),
-    url(r'^(?P<nazwa_modelu>[^.]+)$', views.universal),
+    url(r'^(?P<model_name>[^.]+)$', views.universal),
 ]
 

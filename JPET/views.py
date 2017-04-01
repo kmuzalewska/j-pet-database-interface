@@ -4,7 +4,7 @@ from django.template import loader
 from django.shortcuts import redirect
 from django.forms import modelform_factory
 from .models import *
-#from .forms import UniversalForm
+from django.http import HttpResponse, HttpResponseNotFound
 from django.forms import Textarea 
 # Create your views here.
 def index(request):
@@ -38,17 +38,23 @@ def fieldsForModel(model_name):
 
 
 def universal(request, model_name):
-    try:#if request.method == "POST":
-        f =modelform_factory(dict_of_all_classes[model_name], fields=fieldsForModel(model_name)) 
-        form = f()
-        if form.is_valid():
-            #print(form.fields)
-            post = form.save()
-            return redirect('index')
-        #else:
-            #form = UniversalForm(nazwa_modelu)
-        return render(request, 'universal.html', {'form': form})
+    try:
+        f =modelform_factory(dict_of_all_classes[model_name], fields=fieldsForModel(model_name))
+        if request.method == "POST":
+            print 'dffhghgfs'
+            form = f()
+            if form.is_valid():
+                post = form.save()
+                print 'dffhs'
+                post.save()
+                return render(request, 'universal.html', {'form': form})
+            else:
+                print 'dffasshs'
+                return render(request, 'universal.html', {'form': form})
+        else:
+            form = f()
+            print 'dfs'
+            return render(request, 'universal.html', {'form': form})
     except KeyError:
-        print 'hello'
-    # jak dac 404
+        return HttpResponseNotFound('<h1>Page not found</h1>')
 

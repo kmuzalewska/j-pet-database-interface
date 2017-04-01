@@ -19,13 +19,13 @@ from django.contrib.auth import views as auth_views
 from JPET import views
 
 urlpatterns = [
-    url(r'^login/$', auth_views.login, name='login'),
-    url(r'^logout/$', auth_views.logout, name='logout'),
+    url(r'^login$', auth_views.login, name='login'),
+    url(r'^logout$', auth_views.logout, name='logout'),
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
-    url(r'^runs/', views.runs, name='runs'),
-    url(r'^setups/', views.setups, name='setups'),
-    url(r'^faq/', views.faq, name='faq'),
+    url(r'^runs', views.runs, name='runs'),
+    url(r'^setups', views.setups, name='setups'),
+    url(r'^faq', views.faq, name='faq'),
     url(r'^(?P<model_name>[^.]+)$', views.universal),
 ]
 

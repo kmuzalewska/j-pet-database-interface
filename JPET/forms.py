@@ -1,186 +1,239 @@
 from django import forms
-from .models import Scin, ScinType, StatusType
+from .models import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.db import models
 from django.forms.widgets import PasswordInput, TextInput
 import collections
+from django.forms import *
+
+allWidget = {
+    'name': TextInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Name'}),
+    'description': Textarea(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Description'}),
+    'length': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Version', 'min': '0'}),
+    'width': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Version', 'min': '0'}),
+    'height': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Version', 'min': '0'}),
+    'version': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Version', 'min': '0'}),
+    'createDate': DateTimeInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Create date'}),
+    'dateTime': DateTimeInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Date time'}),
+    'type': Select(attrs={'class': 'mdl-textfield__input'}),
+    'generalStatus': Select(attrs={'class': 'mdl-textfield__input'}),
+    'radius': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Radius'}),
+    'frame': Select(attrs={'class': 'mdl-textfield__input'}),
+    'theta': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Theta'}),
+    'layer': Select(attrs={'class': 'mdl-textfield__input'}), 
+    'parentSlot': Select(attrs={'class': 'mdl-textfield__input'}),
+    'scin': Select(attrs={'class': 'mdl-textfield__input'}),
+    'status': Select(attrs={'class': 'mdl-textfield__input'}),
+    'slot': Select(attrs={'class': 'mdl-textfield__input'}),
+    'setup':Select(attrs={'class': 'mdl-textfield__input'}),
+    'attLength': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Att Length'}),
+    'velocity': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Velocity'}),
+    'zOffSet': NumberInput(attrs={'class': 'mdl-textfield__input', 'default':'0','placeholder': 'zOffSet'}),
+    'producer': TextInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Producer'}),
+    'purchaseDate': DateTimeInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Purchase Date'}),   
+    'serialNumber': TextInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Serial Number'}),
+    'pmModel':Select(attrs={'class': 'mdl-textfield__input'}), 
+    'maxHV': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Max HV'}),
+    'takesPositiveVoltage': CheckboxInput(attrs={'class': 'mdl-textfield__input'}),
+    'driverPluginInfo': Textarea(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Driver plugin info'}),
+    'idX': TextInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'ID X'}),
+    'maxV': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Max V'}),
+    'minV': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Min V'}),
+    'givesPositiveVoltage': CheckboxInput(attrs={'class': 'mdl-textfield__input'}),
+    'hv': Select(attrs={'class': 'mdl-textfield__input'}),
+    'side':Select(attrs={'class': 'mdl-textfield__input'}),
+    'hvChannel':Select(attrs={'class': 'mdl-textfield__input'}),
+    'pm':Select(attrs={'class': 'mdl-textfield__input'}),
+    'fileName': TextInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'File name'}),
+    'checksum': TextInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Check sum'}),
+    'run':Select(attrs={'class': 'mdl-textfield__input'}),
+    'user':Select(attrs={'class': 'mdl-textfield__input'}),
+    'startDateTime': DateTimeInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Start Date Time'}),   
+    'endDateTime': DateTimeInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'End Date Time'}),   
+    'source':Select(attrs={'class': 'mdl-textfield__input'}),
+    'measurement':Select(attrs={'class': 'mdl-textfield__input'}),
+    'colimated': CheckboxInput(attrs={'class': 'mdl-textfield__input'}),
+    'positionX': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Position X'}),
+    'positionY': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Position Y'}),
+    'positionZ': NumberInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Position Z'}),
 
 
+}
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(widget=TextInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Login'}))
-    password = forms.CharField(widget=PasswordInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Password'}))
+    username = CharField(widget=TextInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Login'}))
+    password = CharField(widget=PasswordInput(attrs={'class': 'mdl-textfield__input', 'placeholder': 'Password'}))
 
-
-# dict_of_all_classes = {'scintype':ScinType, 
-#                         'scin':Scin}
-
-
-# class UniversalForm(forms.Form):
-#     def __init__(self, model_name):
-#         super(UniversalForm, self).__init__(*args, **kwargs)
-#         self.model_name = model_name
-#         self.f = dict_of_all_classes[self.model_name]
-#         name = self.f.__name__.lower()
-#         setattr(self, name, self.f(*args, **kwargs))
-#         form = getattr(self, name)
-#         self.fields.update(form.fields)
-#         self.initial.update(form.initial)
-
-#     def fieldsForModel(self, model_name):
-#         self.modelFields = dict_of_all_classes[model_name]._meta.fields
-#         newmodel = []
-#         for i in modelFields:
-#             newmodel.append(i.name)
-#         return newmodel
-
-class ScinTypeForm(forms.ModelForm):
+class ScinTypeForm(ModelForm):
 
     class Meta:
         model = ScinType
         fields = '__all__'
+        widgets = allWidget
 
 
-class ScinForm(forms.ModelForm):
+
+class ScinForm(ModelForm):
 
     class Meta:
         model = Scin
         fields = '__all__'
+        widgets = allWidget
 
 
-class SetupForm(forms.ModelForm):
+class SetupForm(ModelForm):
 
     class Meta:
         model = Setup
         fields = '__all__'
+        widgets = allWidget
 
 
-class StatusTypeForm(forms.ModelForm):
+class StatusTypeForm(ModelForm):
 
     class Meta:
         model = StatusType
         fields = '__all__'
+        widgets = allWidget
 
 
-class StatusForm(forms.ModelForm):
+class StatusForm(ModelForm):
 
     class Meta:
         model = Status
         fields = '__all__'
+        widgets = allWidget
 
 
-class FrameForm(forms.ModelForm):
+class FrameForm(ModelForm):
 
     class Meta:
         model = Frame
         fields = '__all__'
+        widgets = allWidget
 
 
-class LayerForm(forms.ModelForm):
+class LayerForm(ModelForm):
 
     class Meta:
         model = Layer
         fields = '__all__'
+        widgets = allWidget
 
 
-class SlotForm(forms.ModelForm):
+class SlotForm(ModelForm):
 
     class Meta:
         model = Slot
         fields = '__all__'
+        widgets = allWidget
 
 
-class ScinInsertetForm(forms.ModelForm):
+class ScinInsertedForm(ModelForm):
 
     class Meta:
-        model = ScinInsertet
+        model = ScinInserted
         fields = '__all__'
+        widgets = allWidget
 
 
-class PMModelForm(forms.ModelForm):
+class PMModelForm(ModelForm):
 
     class Meta:
         model = PMModel
         fields = '__all__'
+        widgets = allWidget
 
 
-class PMForm(forms.ModelForm):
+class PMForm(ModelForm):
 
     class Meta:
         model = PM
         fields = '__all__'
+        widgets = allWidget
 
 
-class HVForm(forms.ModelForm):
+class HVForm(ModelForm):
 
     class Meta:
         model = HV
         fields = '__all__'
+        widgets = allWidget
 
-class HVChannelForm(forms.ModelForm):
+class HVChannelForm(ModelForm):
 
     class Meta:
         model = HVChannel
         fields = '__all__'
+        widgets = allWidget
 
 
-class SideForm(forms.ModelForm):
+class SideForm(ModelForm):
 
     class Meta:
         model = Side
         fields = '__all__'
+        widgets = allWidget
 
 
-class PMInsertedForm(forms.ModelForm):
+class PMInsertedForm(ModelForm):
 
     class Meta:
         model = PMInserted
         fields = '__all__'
+        widgets = allWidget
 
 
-class RunForm(forms.ModelForm):
+class RunForm(ModelForm):
 
     class Meta:
         model = Run
         fields = '__all__'
+        widgets = allWidget
 
 
-class MeasurementTypeForm(forms.ModelForm):
+class MeasurementTypeForm(ModelForm):
 
     class Meta:
         model = MeasurementType
         fields = '__all__'
+        widgets = allWidget
 
 
-class MeasurementForm(forms.ModelForm):
-
-    class Meta:
-        model = Measurement
-        fields = '__all__'
-
-
-class MeasurementForm(forms.ModelForm):
+class MeasurementForm(ModelForm):
 
     class Meta:
         model = Measurement
         fields = '__all__'
+        widgets = allWidget
 
 
-class RadiationSourceTypeForm(forms.ModelForm):
+class MeasurementForm(ModelForm):
+
+    class Meta:
+        model = Measurement
+        fields = '__all__'
+        widgets = allWidget
+
+
+class RadiationSourceTypeForm(ModelForm):
 
     class Meta:
         model = RadiationSourceType
         fields = '__all__'
+        widgets = allWidget
 
 
-class RadiationSourceForm(forms.ModelForm):
+class RadiationSourceForm(ModelForm):
 
     class Meta:
         model = RadiationSource
         fields = '__all__'
+        widgets = allWidget
 
 
-class RadiationSourceInsertedForm(forms.ModelForm):
+class RadiationSourceInsertedForm(ModelForm):
 
     class Meta:
         model = RadiationSourceInserted
         fields = '__all__'
+        widgets = allWidget

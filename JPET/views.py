@@ -27,8 +27,9 @@ def faq(request):
     template = loader.get_template('faq.html')
     return HttpResponse(template.render(request))
 
-# dict_of_all_classes = {'scintype':ScinType, 
-#                         'scin':Scin}
+def allModels(request):
+    template = loader.get_template('allModels.html')
+    return HttpResponse(template.render(request))
 
 dict_of_all_form = {'scintype':ScinTypeForm,
                     'scin':ScinForm,
@@ -38,7 +39,7 @@ dict_of_all_form = {'scintype':ScinTypeForm,
                     'frame':FrameForm,
                     'layer':LayerForm,
                     'slot':SlotForm,
-                    'scininserted':ScinInsertetForm,
+                    'scininserted':ScinInsertedForm,
                     'pmmodel':PMModelForm,
                     'pm':PMForm,
                     'hv':HVForm,
@@ -52,32 +53,19 @@ dict_of_all_form = {'scintype':ScinTypeForm,
                     'radiationsource':RadiationSourceForm,
                     'radiationsourceinserted':RadiationSourceInsertedForm
                     }
-# def fieldsForModel(model_name):
-#     modelFields = dict_of_all_classes[model_name]._meta.fields
-#     newmodel = []
-#     for i in modelFields:
-#         newmodel.append(i.name)
-#     return newmodel
-
 
 def universal(request, model_name):
     try:
-        #f =modelform_factory(dict_of_all_classes[model_name], fields=fieldsForModel(model_name=model_name))
         if request.method == "POST":
-            print 'dffhghgfs'
             form = dict_of_all_form[model_name](request.POST)
-            post = form.save()
             if form.is_valid():
-                # post = form.save()
-                print 'dffhs'
+                post = form.save()
                 post.save()
-                return render(request, 'universal.html', {'form': form})
+                return redirect('allModels')
             else:
-                print 'dffasshs'
                 return render(request, 'universal.html', {'form': form})
         else:
             form = dict_of_all_form[model_name]()
-            print 'dfs'
             return render(request, 'universal.html', {'form': form})
     except KeyError:
         return HttpResponseNotFound('<h1>Page not found</h1>')
